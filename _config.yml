@@ -1,1 +1,4 @@
 theme: jekyll-theme-minimal
+logo: images/logo.ico
+title: ZSXQ Crawler
+show_downloads: true
