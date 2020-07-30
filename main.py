@@ -79,7 +79,7 @@ class ZsxqSpider(object):
     @staticmethod
     def parse_html(content):
         content = content.replace("\n", "<br>")
-        result = re.findall(r"<e\ [^>]*>", content)
+        result = re.findall(r"<e [^>]*>", content)
         for i in result:
             html = PyQuery(i)
             if html.attr("type") == "web":
