@@ -3,23 +3,23 @@
 ## 安装依赖
 
 ```bash
-pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip3 install -r requirements.txt
 ```
 
 ## 使用方法
 
-> 修改 main.py 中的 cookies 以及 要爬取的 group_id
+> 修改 `main.py` 中的 `cookies` 以及 要爬取的 `group_id`
 
 ```python
 class ZsxqSpider(object):
     def __init__(self):
-        self.group_id = "15xxxxxxxxx812"       # 修改成你要爬取的 Group ID
+        self.group_id = "152********812"
         self.cookies = {
-            "UM_distinctid": "******",
+            "UM_distinctid": "********",
             "abtest_env": "product",
-            "zsxq_access_token": "******",
+            "zsxq_access_token": "********",
             "sajssdk_2015_cross_new_user": "1",
-            "sensorsdata2015jssdkcross": "******",
+            "sensorsdata2015jssdkcross": "********",
         }
 ```
 
@@ -31,4 +31,6 @@ python3 main.py
 
 ## 效果
 
-![结果](images/images.jpg)
+结果输出为 MarkDown 格式，可以通过 Typora 转为 HTML 或 PDF
+
+![结果](images/images.png)

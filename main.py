@@ -3,7 +3,11 @@ from urllib import parse
 
 import pangu
 import requests
+from loguru import logger
 from pyquery import PyQuery
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 class ZsxqSpider(object):
@@ -13,7 +17,6 @@ class ZsxqSpider(object):
             "UM_distinctid": "********",
             "abtest_env": "product",
             "zsxq_access_token": "********",
-            "sajssdk_2015_cross_new_user": "1",
             "sensorsdata2015jssdkcross": "********",
         }
 
@@ -32,6 +35,7 @@ class ZsxqSpider(object):
         }
         self.data = dict()
         self.md_list = []
+        self.count = 0
 
     def crawler(self):
         self.params["end_time"] = self.end_time
@@ -42,6 +46,7 @@ class ZsxqSpider(object):
         if self.data.get("succeeded"):
             return True
         else:
+            logger.error(f"Crawler Group: {self.group_id} error!")
             return False
 
     def parse_topics(self):
@@ -51,7 +56,9 @@ class ZsxqSpider(object):
         if self.end_time != self.latest_time:
             self.latest_time = self.end_time
         else:
+            logger.info(f"Crawler Group: {self.group_id} finished!")
             return False
+        self.count += len(topics)
         for topic in topics:
             md = []
             topic_type = topic.get("type")
@@ -61,10 +68,12 @@ class ZsxqSpider(object):
             elif topic_type == "q&a":
                 md += self.parse_qa(topic)
             else:
+                self.count -= 1
                 continue
             md.append(self.parse_comment(topic))
             md_text = "\n".join(md)
             self.md_list.append(md_text)
+        logger.info(f"Crawler Group: {self.group_id} {self.count} count!")
         return True
 
     @staticmethod
@@ -137,8 +146,10 @@ class ZsxqSpider(object):
             if not self.parse_topics():
                 break
         text = "\n".join(self.md_list[::-1])
-        with open(f"{self.group_id}.md", "w") as f:
+        logger.info(f"Writing into {self.group_id}.md")
+        with open(f"data/{self.group_id}.md", "w") as f:
             f.write(text)
+        logger.info(f"Crawler {self.group_id} Finished, Count: {self.count}")
 
 
 if __name__ == "__main__":
